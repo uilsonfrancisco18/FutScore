@@ -1,21 +1,38 @@
+import AppShell from "@/src/components/Layout/AppShell";
+import Hero from "@/src/components/Hero";
+import StatCards from "@/src/components/StatCards";
 import StandingsTable from "@/src/components/StandingsTable";
+import Fixtures from "@/src/components/Fixtures";
+import Results from "@/src/components/Results";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0B1220] text-white">
-      <div className="mx-auto max-w-7xl px-8 py-10">
-        <h1 className="text-center text-5xl font-bold text-green-400">
-          ⚽ FutScore
-        </h1>
+    <AppShell>
+      <Hero />
 
-        <p className="mt-2 text-center text-gray-400">
-          Campeonato Brasileiro Série A
-        </p>
+      <StatCards />
 
-        <div className="mt-10 rounded-2xl bg-[#161D2F] p-6 shadow-2xl">
-          <StandingsTable />
+      <div className="mt-8 rounded-2xl bg-[#161D2F] p-6 shadow-2xl">
+        <StandingsTable />
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl bg-[#161D2F] p-6 shadow-2xl">
+          <h2 className="mb-4 text-2xl font-bold">
+            Próximos Jogos
+          </h2>
+
+          <Fixtures />
+        </div>
+
+        <div className="rounded-2xl bg-[#161D2F] p-6 shadow-2xl">
+          <h2 className="mb-4 text-2xl font-bold">
+            Últimos Resultados
+          </h2>
+
+          <Results />
         </div>
       </div>
-    </main>
+    </AppShell>
   );
 }
