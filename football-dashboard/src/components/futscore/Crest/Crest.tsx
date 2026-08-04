@@ -18,7 +18,21 @@ export function Crest({
   size?: keyof typeof sizes;
   className?: string;
 }) {
-  const c = getClub(club);
+  const c =
+    getClub(club) ??
+    {
+      id: "unknown",
+      name: club,
+      short: club,
+      abbr: "?",
+      city: "",
+      stadium: "",
+      coach: "",
+      colors: ["#334155", "#94A3B8"] as [string, string],
+    };
+
+  console.log("API:", club);
+  console.log("Encontrado:", JSON.stringify(c, null, 2));
 
   return (
     <span

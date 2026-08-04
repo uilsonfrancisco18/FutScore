@@ -2,8 +2,9 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { Crest, StatusChip } from "@/src/components/futscore/Crest/Crest";
-import { club as getClub, type Fixture } from "@/src/Lib/futscore-data";
+import { club as getClub } from "@/src/Lib/futscore-data";
 import { cn } from "@/src/Lib/utils";
+import type { Fixture } from "@/src/types/football";
 
 export function SectionCard({
   title,

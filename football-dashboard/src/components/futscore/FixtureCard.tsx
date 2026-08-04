@@ -2,16 +2,21 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { Crest, StatusChip } from "./Crest/Crest";
-import { club as getClub, type Fixture } from "@/src/Lib/futscore-data";
+import { club as getClub } from "@/src/Lib/futscore-data";
+import type { Fixture } from "@/src/types/football";
 
 export default function FixtureCard({
   fixture,
 }: {
   fixture: Fixture;
 }) {
-  const home = getClub(fixture.home);
-  const away = getClub(fixture.away);
+    const home = getClub(fixture.home) ?? {
+  short: fixture.home,
+};
 
+const away = getClub(fixture.away) ?? {
+  short: fixture.away,
+};
   return (
     <Link
       href="/partida"
@@ -35,7 +40,7 @@ export default function FixtureCard({
               club={fixture.home}
               size="sm"
             />
-            <span>{home.short}</span>
+            <span>{home.short || fixture.home}</span>
           </div>
 
           <span className="font-bold">
@@ -49,7 +54,7 @@ export default function FixtureCard({
               club={fixture.away}
               size="sm"
             />
-            <span>{away.short}</span>
+            <span>{away.short || fixture.away}</span>
           </div>
 
           <span className="font-bold">
