@@ -2,9 +2,21 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { Crest, StatusChip } from "@/src/components/futscore/Crest/Crest";
-import { club as getClub } from "@/src/Lib/futscore-data";
 import { cn } from "@/src/Lib/utils";
 import type { Fixture } from "@/src/types/football";
+
+type FixtureWithTeams = Fixture & {
+  homeTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+  awayTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+};
 
 export function SectionCard({
   title,
@@ -85,8 +97,15 @@ export function StatCard({
 }
 
 export function FixtureCard({ f }: { f: Fixture }) {
-  const home = getClub(f.home);
-  const away = getClub(f.away);
+  const fixtureWithTeams = f as FixtureWithTeams;
+  const homeTeam = fixtureWithTeams.homeTeam ?? {
+    name: f.home,
+    shortName: f.home,
+  };
+  const awayTeam = fixtureWithTeams.awayTeam ?? {
+    name: f.away,
+    shortName: f.away,
+  };
 
   return (
     <Link
@@ -106,8 +125,8 @@ export function FixtureCard({ f }: { f: Fixture }) {
 
       <div className="space-y-2.5">
         <TeamLine
-          club={f.home}
-          name={home.short}
+          club={homeTeam}
+          name={homeTeam.shortName || homeTeam.name || f.home}
           score={f.score?.[0]}
           dim={
             f.status === "finished" &&
@@ -116,8 +135,8 @@ export function FixtureCard({ f }: { f: Fixture }) {
         />
 
         <TeamLine
-          club={f.away}
-          name={away.short}
+          club={awayTeam}
+          name={awayTeam.shortName || awayTeam.name || f.away}
           score={f.score?.[1]}
           dim={
             f.status === "finished" &&
@@ -149,7 +168,7 @@ function TeamLine({
   score,
   dim,
 }: {
-  club: string;
+  club: string | { crest?: string; name?: string; shortName?: string };
   name: string;
   score?: number;
   dim?: boolean;
@@ -192,11 +211,14 @@ export function ScoreRow({
   score,
   round,
 }: {
-  home: string;
-  away: string;
+  home: string | { crest?: string; name?: string; shortName?: string };
+  away: string | { crest?: string; name?: string; shortName?: string };
   score: [number, number];
   round: number;
 }) {
+  const homeTeam = typeof home === "string" ? { name: home, shortName: home } : home;
+  const awayTeam = typeof away === "string" ? { name: away, shortName: away } : away;
+
   return (
     <div className="lift rounded-xl border border-border/70 bg-secondary/30 p-3">
       <p className="mb-2 text-[11px] text-muted-foreground">
@@ -206,12 +228,12 @@ export function ScoreRow({
       <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <Crest
-            club={home}
+            club={homeTeam}
             size="sm"
           />
 
           <span className="truncate text-sm font-semibold">
-            {getClub(home).short}
+            {homeTeam.shortName || homeTeam.name || "Time"}
           </span>
         </div>
 
@@ -223,11 +245,11 @@ export function ScoreRow({
 
         <div className="flex min-w-0 items-center justify-end gap-2">
           <span className="truncate text-right text-sm font-semibold">
-            {getClub(away).short}
+            {awayTeam.shortName || awayTeam.name || "Time"}
           </span>
 
           <Crest
-            club={away}
+            club={awayTeam}
             size="sm"
           />
         </div>

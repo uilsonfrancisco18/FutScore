@@ -2,9 +2,22 @@ import FixtureCard from "@/src/components/futscore/FixtureCard";
 import { getMatches } from "@/src/services/football";
 import type { Fixture } from "@/src/types/football";
 
+type FixtureWithTeams = Fixture & {
+  homeTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+  awayTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+};
+
 export default async function Fixtures() {
   const data = await getMatches();
-  const fixtures: Fixture[] = (data.matches ?? [])
+  const fixtures: FixtureWithTeams[] = (data.matches ?? [])
     .filter((match) => match.status === "SCHEDULED" || match.status === "TIMED" || match.status === "LIVE")
     .slice(0, 5)
     .map((match) => {
@@ -18,6 +31,16 @@ export default async function Fixtures() {
         id: String(match.id),
         home: match.homeTeam.name,
         away: match.awayTeam.name,
+        homeTeam: {
+          name: match.homeTeam.name,
+          shortName: match.homeTeam.shortName || match.homeTeam.name,
+          crest: match.homeTeam.crest,
+        },
+        awayTeam: {
+          name: match.awayTeam.name,
+          shortName: match.awayTeam.shortName || match.awayTeam.name,
+          crest: match.awayTeam.crest,
+        },
         date: `${dateLabel}`,
         day: "today",
         time: date.toLocaleTimeString("pt-BR", {

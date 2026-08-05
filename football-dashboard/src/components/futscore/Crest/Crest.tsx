@@ -1,4 +1,5 @@
-import { club as getClub } from "@/src/Lib/futscore-data";
+import Image from "next/image";
+
 import { cn } from "@/src/Lib/utils";
 
 const sizes = {
@@ -8,54 +9,65 @@ const sizes = {
   xl: "h-24 w-24 text-xl",
 };
 
-/** Escudo estilizado do clube */
+type CrestSource =
+  | string
+  | {
+      crest?: string;
+      name?: string;
+      shortName?: string;
+    };
+
+function getCrestUrl(club: CrestSource): string | undefined {
+  if (typeof club === "string") {
+    return club.startsWith("http://") || club.startsWith("https://")
+      ? club
+      : undefined;
+  }
+
+  return club.crest;
+}
+
+function getLabel(club: CrestSource): string {
+  if (typeof club === "string") {
+    return club;
+  }
+
+  return club.shortName || club.name || "?";
+}
+
+/** Escudo do clube com imagem oficial quando disponível */
 export function Crest({
   club,
   size = "md",
   className,
 }: {
-  club: string;
+  club: CrestSource;
   size?: keyof typeof sizes;
   className?: string;
 }) {
-  const c =
-    getClub(club) ??
-    {
-      id: "unknown",
-      name: club,
-      short: club,
-      abbr: "?",
-      city: "",
-      stadium: "",
-      coach: "",
-      colors: ["#334155", "#94A3B8"] as [string, string],
-    };
-
-  console.log("API:", club);
-  console.log("Encontrado:", JSON.stringify(c, null, 2));
+  const crestUrl = getCrestUrl(club);
+  const label = getLabel(club);
+  const fallbackLabel = label.slice(0, 2).toUpperCase();
 
   return (
     <span
-      aria-label={`Escudo ${c.name}`}
+      aria-label={`Escudo ${label}`}
       className={cn(
-        "relative grid shrink-0 place-items-center font-bold tracking-wider",
+        "relative grid shrink-0 place-items-center overflow-hidden rounded-full border border-border/60 bg-muted/80 text-muted-foreground",
         sizes[size],
         className
       )}
-      style={{
-        background: `linear-gradient(150deg, ${c.colors[0]} 0%, ${c.colors[0]} 52%, ${c.colors[1]} 52%, ${c.colors[1]} 100%)`,
-        clipPath:
-          "polygon(50% 0%, 100% 12%, 100% 62%, 50% 100%, 0% 62%, 0% 12%)",
-        color: "#F8FAFC",
-        textShadow: "0 1px 2px rgba(0,0,0,.55)",
-      }}
     >
-      <span
-        className="flex h-[56%] w-[82%] items-center justify-center rounded-[4px] text-[10px] font-bold"
-        style={{ background: "rgba(9,14,26,.78)" }}
-      >
-        {c.abbr}
-      </span>
+      {crestUrl ? (
+        <Image
+          src={crestUrl}
+          alt={`Escudo de ${label}`}
+          fill
+          className="object-contain p-1"
+        />
+      ) : (
+        <span className="text-[10px] font-semibold uppercase">{fallbackLabel}</span>
+      )}
     </span>
   );
 }

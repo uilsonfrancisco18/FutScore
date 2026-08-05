@@ -7,8 +7,16 @@ export default async function Results() {
     .filter((match) => match.status === "FINISHED" || match.status === "AWARDED")
     .slice(0, 5)
     .map((match) => ({
-      home: match.homeTeam.name,
-      away: match.awayTeam.name,
+      home: {
+        name: match.homeTeam.name,
+        shortName: match.homeTeam.shortName || match.homeTeam.name,
+        crest: match.homeTeam.crest,
+      },
+      away: {
+        name: match.awayTeam.name,
+        shortName: match.awayTeam.shortName || match.awayTeam.name,
+        crest: match.awayTeam.crest,
+      },
       score: [
         match.score?.fullTime?.home ?? 0,
         match.score?.fullTime?.away ?? 0,
@@ -20,7 +28,7 @@ export default async function Results() {
     <div className="space-y-3">
       {results.map((result, index) => (
         <ScoreRow
-          key={`${result.home}-${result.away}-${index}`}
+          key={`${result.home.name}-${result.away.name}-${index}`}
           home={result.home}
           away={result.away}
           score={result.score}

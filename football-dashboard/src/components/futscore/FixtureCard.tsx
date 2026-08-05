@@ -2,21 +2,36 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { Crest, StatusChip } from "./Crest/Crest";
-import { club as getClub } from "@/src/Lib/futscore-data";
 import type { Fixture } from "@/src/types/football";
+
+type FixtureWithTeams = Fixture & {
+  homeTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+  awayTeam?: {
+    name?: string;
+    shortName?: string;
+    crest?: string;
+  };
+};
 
 export default function FixtureCard({
   fixture,
 }: {
   fixture: Fixture;
 }) {
-    const home = getClub(fixture.home) ?? {
-  short: fixture.home,
-};
+  const fixtureWithTeams = fixture as FixtureWithTeams;
+  const homeTeam = fixtureWithTeams.homeTeam ?? {
+    name: fixture.home,
+    shortName: fixture.home,
+  };
+  const awayTeam = fixtureWithTeams.awayTeam ?? {
+    name: fixture.away,
+    shortName: fixture.away,
+  };
 
-const away = getClub(fixture.away) ?? {
-  short: fixture.away,
-};
   return (
     <Link
       href="/partida"
@@ -37,10 +52,10 @@ const away = getClub(fixture.away) ?? {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Crest
-              club={fixture.home}
+              club={homeTeam}
               size="sm"
             />
-            <span>{home.short || fixture.home}</span>
+            <span>{homeTeam.shortName || homeTeam.name || fixture.home}</span>
           </div>
 
           <span className="font-bold">
@@ -51,10 +66,10 @@ const away = getClub(fixture.away) ?? {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Crest
-              club={fixture.away}
+              club={awayTeam}
               size="sm"
             />
-            <span>{away.short || fixture.away}</span>
+            <span>{awayTeam.shortName || awayTeam.name || fixture.away}</span>
           </div>
 
           <span className="font-bold">

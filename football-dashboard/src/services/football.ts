@@ -56,6 +56,61 @@ export async function getMatches(): Promise<MatchesResponse> {
   }
 }
 
+export async function getUpcomingMatches(): Promise<MatchesResponse> {
+  try {
+    const [scheduled, timed, live, inPlay] = await Promise.all([
+      fetchFootball<MatchesResponse>("/competitions/BSA/matches?status=SCHEDULED"),
+      fetchFootball<MatchesResponse>("/competitions/BSA/matches?status=TIMED"),
+      fetchFootball<MatchesResponse>("/competitions/BSA/matches?status=LIVE"),
+      fetchFootball<MatchesResponse>("/competitions/BSA/matches?status=IN_PLAY"),
+    ]);
+
+    const matches = [
+      ...(scheduled.matches ?? []),
+      ...(timed.matches ?? []),
+      ...(live.matches ?? []),
+      ...(inPlay.matches ?? []),
+    ];
+
+    const seenIds = new Set<string | number>();
+    const uniqueMatches = matches.filter((match) => {
+      const matchId = match.id;
+
+      if (seenIds.has(matchId)) {
+        return false;
+      }
+
+      seenIds.add(matchId);
+      return true;
+    });
+
+    uniqueMatches.sort((a, b) => new Date(a.utcDate).getTime() - new Date(b.utcDate).getTime());
+
+    return {
+      matches: uniqueMatches.slice(0, 5),
+    };
+  } catch (error) {
+    console.error("Erro ao buscar próximos jogos:", error);
+    return { matches: [] };
+  }
+}
+
+export async function getLatestResults(): Promise<MatchesResponse> {
+  try {
+    const data = await fetchFootball<MatchesResponse>("/competitions/BSA/matches?status=FINISHED");
+    const matches = [...(data.matches ?? [])].sort(
+      (a, b) => new Date(b.utcDate).getTime() - new Date(a.utcDate).getTime(),
+    );
+
+    return {
+      matches: matches.slice(0, 5),
+    };
+  } catch (error) {
+    console.error("Erro ao buscar resultados recentes:", error);
+    return { matches: [] };
+  }
+}
+
 export async function getScorers(): Promise<ScorersResponse> {
   try {
     return await fetchFootball<ScorersResponse>("/competitions/BSA/scorers");
