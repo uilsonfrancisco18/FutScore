@@ -3,11 +3,10 @@ import { Trophy } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="pitch-glow overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-2xl sm:p-8">
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+    <section className="relative overflow-hidden rounded-3xl bg-[#111827] p-8 lg:p-12">
+      <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto]">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
+          <span className="inline-flex rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-green-400">
             Rodada 25 em andamento
           </span>
 
@@ -30,14 +29,14 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/jogos"
-              className="rounded-xl bg-green-500 px-6 py-3 font-semibold text-black transition hover:scale-[1.03] hover:bg-green-400"
+              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-6 py-3 font-semibold text-black transition hover:scale-[1.03] hover:bg-green-400"
             >
               Ver jogos de hoje
             </Link>
 
             <Link
               href="/campeonatos"
-              className="rounded-xl border border-gray-600 px-6 py-3 font-semibold transition hover:border-green-500 hover:text-green-400"
+              className="inline-flex items-center justify-center rounded-xl border border-gray-600 px-6 py-3 font-semibold transition hover:border-green-500 hover:text-green-400"
             >
               Explorar competição
             </Link>
