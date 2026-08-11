@@ -27,6 +27,7 @@ export default function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
+            {/* JOGOS - ATIVO */}
             <Link
               href="/jogos"
               className="inline-flex items-center justify-center rounded-xl bg-green-500 px-6 py-3 font-semibold text-black transition hover:scale-[1.03] hover:bg-green-400"
@@ -34,12 +35,17 @@ export default function Hero() {
               Ver jogos de hoje
             </Link>
 
-            <Link
-              href="/campeonatos"
-              className="inline-flex items-center justify-center rounded-xl border border-gray-600 px-6 py-3 font-semibold transition hover:border-green-500 hover:text-green-400"
+            {/* COMPETIÇÃO - TEMPORARIAMENTE DESATIVADO */}
+            <button
+              type="button"
+              disabled
+              className="inline-flex cursor-not-allowed items-center justify-center rounded-xl border border-gray-700 px-6 py-3 font-semibold text-gray-500 opacity-60"
             >
               Explorar competição
-            </Link>
+              <span className="ml-2 text-xs font-normal">
+                Em breve
+              </span>
+            </button>
           </div>
         </div>
 
